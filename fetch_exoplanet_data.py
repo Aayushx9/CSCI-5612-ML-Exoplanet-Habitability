@@ -1,24 +1,20 @@
+# fetch_exoplanet_data.py
 """
-fetch_exoplanet_data.py
-
-Pulls confirmed-exoplanet data from the NASA Exoplanet Archive's public
-TAP (Table Access Protocol) API and saves it as a raw CSV for the
-DataPrep_EDA tab of the project.
-
-No API key is required for the Exoplanet Archive TAP service.
+This code pulls up confirmed exoplanet data from the NASA Exoplanet Archive's public
+TAP (Table Access Protocol) API and saves it as a raw CSV for the 
+DataPrep_EDA tab of the project. 
 
 Usage:
     python fetch_exoplanet_data.py
 """
-
 import pandas as pd
 import requests
 
 # Core TAP endpoint
 TAP_URL = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
 
-# Columns pulled from the Planetary Systems Composite Parameters table
-# (pscomppars): one best-estimate row per confirmed planet.
+# Columns from the Planetary Systems Composite Parameters table
+# (pscomppars): one best estimate row per confirmed planet.
 COLUMNS = [
     "pl_name",        # planet name
     "hostname",       # host star name
