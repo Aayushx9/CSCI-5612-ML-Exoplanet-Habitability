@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataPrep_EDA · Exoplanet Discovery &amp; Habitability</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="topnav"><span class="brand">Exoplanet Discovery &amp; Habitability</span><a href="index.html">Home</a><a href="introduction.html">Introduction</a><a href="dataprep_eda.html" class="active">DataPrep_EDA</a><a href="clustering.html">Clustering</a><a href="pca.html">PCA</a><a href="naivebayes.html">NaiveBayes</a><a href="dectrees.html">DecTrees</a><a href="svms.html">SVMs</a><a href="regression.html">Regression</a><a href="nn.html">NN</a><a href="conclusions.html">Conclusions</a><a href="about.html">About</a></nav>
+<main>
+  <p class="eyebrow">DataPrep_EDA</p>
+  <h1>Data Preparation &amp; Exploration</h1>
+
+  <div class="section-card">
+    <h3>Primary source: NASA Exoplanet Archive API</h3>
+    <p style="margin-bottom:0.6em">Website: <a href="https://exoplanetarchive.ipac.caltech.edu/">exoplanetarchive.ipac.caltech.edu</a></p>
+    <p style="margin-bottom:0.6em">Core endpoint (Table Access Protocol, synchronous query):</p>
+    <pre>https://exoplanetarchive.ipac.caltech.edu/TAP/sync</pre>
+    <p style="margin-bottom:0.6em">Example GET request pulling key planet and host-star columns from the Planetary Systems Composite Parameters table:</p>
+    <pre>https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,hostname,discoverymethod,disc_year,pl_orbper,pl_rade,pl_bmasse,pl_eqt,st_teff,st_rad,st_mass,sy_dist+from+pscomppars&amp;format=csv</pre>
+    <p style="margin:0">Retrieval code: <a href="scripts/fetch_exoplanet_data.py">fetch_exoplanet_data.py</a> (Python, uses <code>requests</code> and <code>pandas</code>).</p>
+  </div>
+
+  <div class="section-card">
+    <h3>Secondary source: PHL Habitable Worlds Catalog</h3>
+    <p style="margin-bottom:0.6em">Website: <a href="https://phl.upr.edu/hwc">phl.upr.edu/hwc</a>, maintained by the Planetary Habitability Laboratory, University of Puerto Rico at Arecibo.</p>
+    <p style="margin:0">Downloaded directly (not via API) to cross-reference computed habitability indices, including the Earth Similarity Index, habitable-zone distance, and habitable-zone classification, against the raw planetary parameters pulled from the Exoplanet Archive.</p>
+  </div>
+
+  <div class="stub">
+    <span class="module-tag">To be added as data collection progresses</span>
+    <p style="margin:0">Raw and cleaned data previews, the general cleaning log (missing values, unit conversions, outlier handling), and at least ten exploratory visualizations will be added here.</p>
+  </div>
+</main>
+
+<footer>
+  Exoplanet Discovery &amp; Habitability. A semester project for a Machine Learning course, built module by module.
+</footer>
+</body>
+</html>
