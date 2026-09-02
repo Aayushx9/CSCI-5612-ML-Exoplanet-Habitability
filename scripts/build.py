@@ -1,7 +1,6 @@
 """
-Generates the static HTML pages for the exoplanet project site from
-a shared template. Run this locally whenever page content changes;
-it is a build helper and is not itself part of the published site.
+This one generates the static HTML pages for the exoplanet project site from
+a shared template.
 """
 import os
 
