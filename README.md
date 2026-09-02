@@ -11,18 +11,18 @@ index.html            Landing page
 introduction.html     Topic overview and 10 research questions
 dataprep_eda.html     Data sources, cleaning, and exploration
 clustering.html       Module 2
-pca.html               Module 2
-naivebayes.html        Module 3
-dectrees.html           Module 3
-svms.html               Module 4
-regression.html         Module 5
-nn.html                  Module 5
-conclusions.html        Final, non-technical summary
-about.html               Optional bio tab
-style.css                Shared site styling
-assets/                  Images and diagrams
-scripts/                 Data-gathering and analysis code
-build.py                 Regenerates the HTML pages from templates
+pca.html              Module 2
+naivebayes.html       Module 3
+dectrees.html         Module 3
+svms.html             Module 4
+regression.html       Module 5
+nn.html               Module 5
+conclusions.html      Final, non-technical summary
+about.html            Bio tab
+style.css             Shared site styling
+assets/               Images and diagrams
+scripts/              Data-gathering and analysis code
+build.py              Regenerates the HTML pages from templates
 ```
 
 ## Data sources
