@@ -1,6 +1,6 @@
 # Exoplanet Discovery & Habitability
 
-A semester-long data science project built module by module: gathering, cleaning, exploring, modeling, and communicating results using the public record of confirmed exoplanets.
+A semester-long data science/ML project built module by module: gathering, cleaning, exploring, modeling and communicating results using the public record of confirmed exoplanets.
 
 **Live site:** _add the GitHub Pages URL here once Settings > Pages is enabled_
 
