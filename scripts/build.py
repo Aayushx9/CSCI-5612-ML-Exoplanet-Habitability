@@ -5,18 +5,18 @@ a shared template.
 import os
 
 PAGES = [
-    ("index",        "Home"),
-    ("introduction",  "Introduction"),
-    ("dataprep_eda",  "DataPrep_EDA"),
-    ("clustering",    "Clustering"),
-    ("pca",           "PCA"),
-    ("naivebayes",    "NaiveBayes"),
-    ("dectrees",      "DecTrees"),
-    ("svms",          "SVMs"),
-    ("regression",    "Regression"),
-    ("nn",            "NN"),
-    ("conclusions",   "Conclusions"),
-    ("about",         "About"),
+    ("index","Home"),
+    ("introduction","Introduction"),
+    ("dataprep_eda","DataPrep_EDA"),
+    ("clustering","Clustering"),
+    ("pca","PCA"),
+    ("naivebayes","NaiveBayes"),
+    ("dectrees","DecTrees"),
+    ("svms","SVMs"),
+    ("regression","Regression"),
+    ("nn","NN"),
+    ("conclusions","Conclusions"),
+    ("about","About"),
 ]
 
 HEAD = """<!doctype html>
