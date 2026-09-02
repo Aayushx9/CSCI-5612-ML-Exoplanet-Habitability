@@ -3,9 +3,6 @@
 This code pulls up confirmed exoplanet data from the NASA Exoplanet Archive's public
 TAP (Table Access Protocol) API and saves it as a raw CSV for the 
 DataPrep_EDA tab of the project. 
-
-Usage:
-    python fetch_exoplanet_data.py
 """
 import pandas as pd
 import requests
