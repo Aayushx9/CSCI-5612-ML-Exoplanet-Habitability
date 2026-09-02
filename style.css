@@ -1,0 +1,176 @@
+/* ============================================================
+   Exoplanet Discovery & Habitability — shared stylesheet
+   Palette grounded in stellar classification colors:
+   deep-space navy base, G-star gold accent, nebula teal,
+   M-dwarf rust used sparingly for emphasis.
+   ============================================================ */
+
+:root {
+  --bg: #0b0f1a;
+  --panel: #131a2b;
+  --panel-line: #232d47;
+  --text: #e9e7e1;
+  --text-dim: #9aa3bd;
+  --accent-gold: #e8a33d;
+  --accent-teal: #4a95a0;
+  --accent-rust: #c1502e;
+  --max-width: 780px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .site-title {
+  font-family: "Spectral", Georgia, serif;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+h1 { font-size: 2.4rem; margin: 0 0 0.6em; font-weight: 400; }
+h2 { font-size: 1.5rem; margin: 2.2em 0 0.7em; color: var(--accent-gold); font-weight: 500; }
+h3 { font-size: 1.1rem; margin: 1.6em 0 0.5em; color: var(--text); font-weight: 600; }
+
+p {
+  max-width: var(--max-width);
+  margin: 0 0 1.2em;
+  color: var(--text);
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
+p.dim { color: var(--text-dim); }
+p.lede, p.eyebrow, figcaption { text-align: left; }
+
+a { color: var(--accent-teal); text-decoration: none; border-bottom: 1px solid transparent; }
+a:hover { border-bottom-color: var(--accent-teal); }
+
+code, pre {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: 0.85em;
+}
+pre {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: 4px;
+  padding: 1em 1.2em;
+  overflow-x: auto;
+  max-width: var(--max-width);
+}
+
+/* ---- nav ---- */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2em 1.1em;
+  padding: 0.9em 1.6em;
+  background: rgba(11, 15, 26, 0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--panel-line);
+}
+.topnav .brand {
+  font-family: "Spectral", serif;
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-right: auto;
+  border: none;
+}
+.topnav a {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  padding: 0.3em 0;
+  border-bottom: 1px solid transparent;
+  white-space: nowrap;
+}
+.topnav a:hover { color: var(--text); }
+.topnav a.active { color: var(--accent-gold); border-bottom-color: var(--accent-gold); }
+
+/* ---- layout ---- */
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3em 1.6em 6em;
+}
+
+.eyebrow { color: var(--accent-teal); font-size: 0.85rem; margin: 0 0 0.4em; }
+
+.lede { font-size: 1.1rem; color: var(--text-dim); max-width: var(--max-width); }
+
+figure { margin: 2em 0; max-width: var(--max-width); }
+figure svg, figure img { width: 100%; height: auto; display: block; }
+figcaption { font-size: 0.88rem; color: var(--text-dim); margin-top: 0.6em; }
+
+ol.questions { max-width: var(--max-width); padding-left: 1.3em; }
+ol.questions li { margin-bottom: 0.9em; text-align: justify; text-justify: inter-word; hyphens: auto; }
+
+.callout {
+  border-left: 3px solid var(--accent-rust);
+  background: var(--panel);
+  padding: 1em 1.3em;
+  max-width: var(--max-width);
+  border-radius: 0 4px 4px 0;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+.section-card {
+  border: 1px solid var(--panel-line);
+  border-radius: 6px;
+  padding: 1.6em 1.8em;
+  margin: 1.6em 0;
+  max-width: var(--max-width);
+  background: var(--panel);
+}
+.section-card h3 { margin-top: 0; }
+
+.stub {
+  border: 1px dashed var(--panel-line);
+  border-radius: 6px;
+  padding: 2.2em;
+  color: var(--text-dim);
+  max-width: var(--max-width);
+}
+.stub .module-tag {
+  display: inline-block;
+  color: var(--accent-teal);
+  font-size: 0.82rem;
+  margin-bottom: 0.6em;
+}
+
+footer {
+  border-top: 1px solid var(--panel-line);
+  padding: 2em 1.6em;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* ---- hero (index) ---- */
+.hero {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 4.5em 1.6em 2em;
+}
+.hero h1 { max-width: 640px; }
+.hero .lede { margin-bottom: 2em; }
+
+@media (max-width: 640px) {
+  h1 { font-size: 1.9rem; }
+  main, .hero { padding-left: 1.2em; padding-right: 1.2em; }
+  .topnav { padding: 0.8em 1.2em; }
+}
