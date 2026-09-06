@@ -3,9 +3,12 @@ Generates the static HTML pages for the exoplanet project site from
 a shared template. Run this locally whenever page content changes;
 it is a build helper and is not itself part of the published site.
 
-Tab structure follows the professor's Week 3 requirements:
+Tab structure and reading order follow the professor's Week 3 pipeline:
 Introduction (landing page) -> Data Gathering -> Cleaning & Prep -> EDA
 -> one tab per model -> Conclusions -> About / References
+
+Every page gets both the top tab bar (jump anywhere) and a bottom
+Previous/Next pair (follow the pipeline in order, one click at a time).
 """
 import os
 
@@ -30,6 +33,8 @@ FOOT = """
 </html>
 """
 
+# Order here IS the pipeline reading order: top nav highlights the current
+# tab, and pipeline_nav() below turns this same list into Previous/Next links.
 NAV_LINKS = [
     ("index.html", "Introduction"),
     ("data_gathering.html", "Data Gathering"),
@@ -66,18 +71,46 @@ def nav(active_href):
     )
 
 
-def write(slug, html):
+def pipeline_nav(active_href):
+    """Bottom-of-page Previous/Next links that walk the pipeline in order,
+    the in-content links the story-arc diagram calls for, distinct from the
+    jump-anywhere top tab bar."""
+    hrefs = [h for h, _ in NAV_LINKS]
+    labels = dict(NAV_LINKS)
+    i = hrefs.index(active_href)
+
+    if i > 0:
+        prev_href = hrefs[i - 1]
+        prev_html = f'<a class="prev" href="{prev_href}">&larr; {labels[prev_href]}</a>'
+    else:
+        prev_html = "<span></span>"
+
+    if i < len(hrefs) - 1:
+        next_href = hrefs[i + 1]
+        next_html = f'<a class="next" href="{next_href}">{labels[next_href]} &rarr;</a>'
+    else:
+        first_href = hrefs[0]
+        next_html = f'<a class="next" href="{first_href}">Back to {labels[first_href]} &rarr;</a>'
+
+    return f'<div class="pipeline-nav">{prev_html}{next_html}</div>'
+
+
+def page(slug, title, inner_html):
+    full = (
+        HEAD.format(title=title)
+        + nav(f"{slug}.html")
+        + "<main>"
+        + inner_html
+        + pipeline_nav(f"{slug}.html")
+        + "</main>"
+        + FOOT
+    )
     with open(f"{slug}.html", "w") as f:
-        f.write(html)
-
-
-def page(slug, title, body):
-    write(slug, HEAD.format(title=title) + nav(f"{slug}.html") + body + FOOT)
+        f.write(full)
 
 
 def model_stub(slug, title, module_note):
-    body = f"""
-<main>
+    inner = f"""
   <p class="eyebrow">{title}</p>
   <h1>{title}</h1>
   <div class="stub">
@@ -89,15 +122,13 @@ def model_stub(slug, title, module_note):
     <p style="margin:0 0 0.4em"><strong>Code.</strong> A link to the code, with the language and core packages noted.</p>
     <p style="margin:0"><strong>Results.</strong> What the output shows, and what it means for the question above, not just the metric.</p>
   </div>
-</main>
 """
-    page(slug, title, body)
+    page(slug, title, inner)
 
 
 def build():
     # --- Introduction (landing page) ---
-    intro_body = f"""
-<main>
+    intro_inner = f"""
   <p class="eyebrow">Introduction</p>
   <h1>Exoplanet Discovery &amp; Habitability</h1>
 
@@ -127,13 +158,11 @@ def build():
     <li>Are potentially habitable planets more common around particular types of stars, such as M dwarfs, than around Sun-like stars, and what would that imply for the search for life?</li>
     <li>How has the field's understanding of habitability evolved over time, and what limitations remain in judging a planet's suitability for life from remote observations alone?</li>
   </ol>
-</main>
 """
-    page("index", "Introduction", intro_body)
+    page("index", "Introduction", intro_inner)
 
     # --- Data Gathering ---
-    gathering_body = """
-<main>
+    gathering_inner = """
   <p class="eyebrow">Data Gathering</p>
   <h1>Data Gathering</h1>
 
@@ -157,13 +186,11 @@ def build():
     <span class="module-tag">To be added</span>
     <p style="margin:0">A small preview of the raw data as pulled, before any cleaning, with a link to the full raw file.</p>
   </div>
-</main>
 """
-    page("data_gathering", "Data Gathering", gathering_body)
+    page("data_gathering", "Data Gathering", gathering_inner)
 
     # --- Cleaning & Prep ---
-    cleaning_body = """
-<main>
+    cleaning_inner = """
   <p class="eyebrow">Cleaning &amp; Prep</p>
   <h1>Cleaning &amp; Prep</h1>
   <div class="stub">
@@ -171,22 +198,19 @@ def build():
     <p style="margin:0 0 1em">This tab will show, side by side, what the raw data looked like and what it looked like after cleaning: missing values handled, incorrect or impossible values corrected, units standardized, and any columns added, removed, or normalized. Each step will be explained in plain language, not just shown.</p>
     <p style="margin:0"><strong>Planned before/after items:</strong> missing radius, mass, or temperature values; unit consistency across NASA Exoplanet Archive and PHL Habitable Worlds Catalog columns; outlier orbital periods and masses; merging the two sources into one working table keyed by planet name.</p>
   </div>
-</main>
 """
-    page("cleaning_prep", "Cleaning & Prep", cleaning_body)
+    page("cleaning_prep", "Cleaning & Prep", cleaning_inner)
 
     # --- EDA ---
-    eda_body = """
-<main>
+    eda_inner = """
   <p class="eyebrow">EDA</p>
   <h1>Exploratory Data Analysis</h1>
   <div class="stub">
     <span class="module-tag">To be added</span>
     <p style="margin:0">At least ten visualizations exploring distributions and relationships in the cleaned data will go here, each with a title, labeled axes, and one sentence of takeaway explaining what it shows and why it matters to the central question.</p>
   </div>
-</main>
 """
-    page("eda", "EDA", eda_body)
+    page("eda", "EDA", eda_inner)
 
     # --- model tabs ---
     model_tabs = {
@@ -202,8 +226,7 @@ def build():
         model_stub(slug, title, f"Content added in {module_note}")
 
     # --- Conclusions ---
-    conclusions_body = f"""
-<main>
+    conclusions_inner = f"""
   <p class="eyebrow">Conclusions</p>
   <h1>Conclusions</h1>
   <div class="callout">
@@ -213,13 +236,11 @@ def build():
     <span class="module-tag">Final deliverable, Module 5</span>
     <p style="margin:0">The non-technical, 5+ paragraph answer belongs here, written in the same plain words as the question above, plus what the analysis could not show and what a next step would look like. No model names or technical jargon in this tab, only what was found and what it means.</p>
   </div>
-</main>
 """
-    page("conclusions", "Conclusions", conclusions_body)
+    page("conclusions", "Conclusions", conclusions_inner)
 
     # --- About / References ---
-    about_body = """
-<main>
+    about_inner = """
   <p class="eyebrow">About / References</p>
   <h1>About / References</h1>
 
@@ -239,9 +260,8 @@ def build():
   <p>Full source for this site and its data-gathering scripts: <a href="https://github.com/Aayushx9">github.com/Aayushx9</a></p>
 
   <p>Contact: aayushchinmay@gmail.com</p>
-</main>
 """
-    page("about_references", "About / References", about_body)
+    page("about_references", "About / References", about_inner)
 
     print("Built", len(NAV_LINKS), "pages.")
 
