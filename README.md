@@ -2,7 +2,7 @@
 
 A semester-long data science project built module by module: gathering, cleaning, exploring, modeling and communicating results using the public record of confirmed exoplanets.
 
-**Live site:** _add the GitHub Pages URL here once Settings > Pages is enabled_
+**Live site:** https://aayushx9.github.io/CSCI-5612-ML-Exoplanet-Habitability/
 
 ## Project structure
 
