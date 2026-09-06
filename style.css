@@ -160,6 +160,25 @@ footer {
   text-align: center;
 }
 
+/* ---- pipeline prev/next links ---- */
+.pipeline-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: var(--max-width);
+  margin-top: 3.2em;
+  padding-top: 1.4em;
+  border-top: 1px solid var(--panel-line);
+}
+.pipeline-nav a {
+  font-family: "Spectral", serif;
+  font-size: 0.98rem;
+  color: var(--accent-gold);
+  border-bottom: 1px solid transparent;
+}
+.pipeline-nav a:hover { border-bottom-color: var(--accent-gold); }
+.pipeline-nav a.next { margin-left: auto; text-align: right; }
+
 /* ---- hero (index) ---- */
 .hero {
   max-width: 960px;
