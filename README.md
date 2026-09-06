@@ -1,28 +1,29 @@
 # Exoplanet Discovery & Habitability
 
-A semester-long data science/ML project built module by module: gathering, cleaning, exploring, modeling and communicating results using the public record of confirmed exoplanets.
+A semester-long data science project built module by module: gathering, cleaning, exploring, modeling, and communicating results using the public record of confirmed exoplanets.
 
 **Live site:** _add the GitHub Pages URL here once Settings > Pages is enabled_
 
 ## Project structure
 
 ```
-index.html            Landing page
-introduction.html     Topic overview and 10 research questions
-dataprep_eda.html     Data sources, cleaning, and exploration
-clustering.html       Module 2
-pca.html              Module 2
-naivebayes.html       Module 3
-dectrees.html         Module 3
-svms.html             Module 4
-regression.html       Module 5
-nn.html               Module 5
-conclusions.html      Final, non-technical summary
-about.html            Bio tab
-style.css             Shared site styling
-assets/               Images and diagrams
-scripts/              Data-gathering and analysis code
-build.py              Regenerates the HTML pages from templates
+index.html              Introduction (landing page) with the central question
+data_gathering.html      Sources, API details, raw data
+cleaning_prep.html       Before/after cleaning steps
+eda.html                 Distributions and relationships, 10+ visualizations
+clustering.html          Module 2
+pca.html                 Module 2
+naivebayes.html          Module 3
+dectrees.html            Module 3
+svms.html                Module 4
+regression.html          Module 5
+nn.html                  Module 5
+conclusions.html         Answers the Introduction's question, in the same words
+about_references.html    Bio, cited sources, code link
+style.css                Shared site styling
+assets/                  Images and diagrams
+scripts/                 Data-gathering and analysis code
+build.py                 Regenerates the HTML pages from templates
 ```
 
 ## Data sources
