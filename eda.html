@@ -12,10 +12,62 @@
 <nav class="topnav"><span class="brand">Exoplanet Discovery &amp; Habitability</span><a href="index.html">Introduction</a><a href="data_gathering.html">Data Gathering</a><a href="cleaning_prep.html">Cleaning &amp; Prep</a><a href="eda.html" class="active">EDA</a><a href="clustering.html">Clustering</a><a href="pca.html">PCA</a><a href="naivebayes.html">NaiveBayes</a><a href="dectrees.html">DecTrees</a><a href="svms.html">SVMs</a><a href="regression.html">Regression</a><a href="nn.html">NN</a><a href="conclusions.html">Conclusions</a><a href="about_references.html">About / References</a></nav><main>
   <p class="eyebrow">EDA</p>
   <h1>Exploratory Data Analysis</h1>
-  <div class="stub">
-    <span class="module-tag">To be added</span>
-    <p style="margin:0">At least ten visualizations exploring distributions and relationships in the cleaned data will go here, each with a title, labeled axes, and one sentence of takeaway explaining what it shows and why it matters to the central question.</p>
-  </div>
+  <p>Eleven views into the cleaned, merged dataset of 6,366 confirmed exoplanets, covering how the data was collected, what kinds of planets and stars show up most, and where the temperate, potentially habitable candidates sit within that population. Visualization code: <a href="scripts/clean_and_visualize.py">clean_and_visualize.py</a> (Python, uses <code>matplotlib</code>).</p>
+
+  <figure>
+    <img src="assets/eda/11_hwc_habitability.png" alt="Bar chart of official Habitable Worlds Catalog classification counts">
+    <figcaption>Only 70 of the 5,565 matched planets carry any official habitable classification at all, underscoring just how rare a strong habitability candidate still is, even after thousands of confirmed discoveries.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/eda/02_discovery_method.png" alt="Bar chart of confirmed planets by discovery method">
+    <figcaption>The transit method accounts for the large majority of confirmed planets, which biases the known population toward planets that happen to cross in front of their star as seen from Earth.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/eda/03_discoveries_per_year.png" alt="Line chart of confirmed exoplanet discoveries per year">
+    <figcaption>Confirmed discoveries jump sharply after 2009 and again after 2014, tracking the Kepler and K2/TESS missions rather than any change in how many planets actually exist.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/eda/04_radius_distribution.png" alt="Histogram of planet radius in Earth radii">
+    <figcaption>Most confirmed planets are smaller than Neptune, with a large cluster only a few times Earth's radius.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/eda/05_mass_distribution.png" alt="Histogram of planet mass in Earth masses">
+    <figcaption>Planet mass spans more than five orders of magnitude, from bodies lighter than Mercury to objects bordering on brown dwarfs.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/eda/06_mass_vs_radius.png" alt="Scatter plot of planet mass versus radius, log-log scale">
+    <figcaption>Mass and radius track closely for smaller planets but scatter widely above roughly ten Earth radii, where gas giants of very different densities overlap.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/eda/07_period_vs_temp.png" alt="Scatter plot of orbital period versus equilibrium temperature">
+    <figcaption>Equilibrium temperature falls off sharply as orbital period increases, consistent with planets further from their star receiving less energy from it.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/eda/08_star_temperature.png" alt="Histogram of host star effective temperature, with the Sun marked for reference">
+    <figcaption>Most confirmed planets orbit stars cooler than the Sun, reflecting both how common cooler stars are and which stars current methods find planets around most easily.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/eda/01_missingness.png" alt="Bar chart showing percentage of missing values per column">
+    <figcaption>Equilibrium temperature and stellar radius are the columns most often missing, a gap carried over from Data Gathering and documented rather than filled in.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/eda/09_size_class.png" alt="Bar chart of planets grouped into size classes">
+    <figcaption>Sub-Neptune and Neptune-sized planets, a size class with no counterpart in the Solar System, form the single largest group of confirmed exoplanets.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/eda/10_temp_zone.png" alt="Bar chart of planets grouped by equilibrium temperature zone">
+    <figcaption>The great majority of confirmed planets are too hot for liquid water under this simple estimate, and only a small fraction fall in the temperate zone this project is most interested in.</figcaption>
+  </figure>
 <div class="pipeline-nav"><a class="prev" href="cleaning_prep.html">&larr; Cleaning &amp; Prep</a><a class="next" href="clustering.html">Clustering &rarr;</a></div></main>
 <footer>
   Exoplanet Discovery &amp; Habitability. A semester project for a Machine Learning course, built module by module.

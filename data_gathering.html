@@ -25,14 +25,18 @@
 
   <div class="section-card">
     <h3>Secondary source: PHL Habitable Worlds Catalog</h3>
-    <p style="margin-bottom:0.6em">Website: <a href="https://phl.upr.edu/hwc">phl.upr.edu/hwc</a>, maintained by the Planetary Habitability Laboratory, University of Puerto Rico at Arecibo.</p>
-    <p style="margin:0">Downloaded directly, not via API, to cross-reference computed habitability indices, including the Earth Similarity Index, habitable-zone distance, and habitable-zone classification, against the raw planetary parameters pulled from the Exoplanet Archive.</p>
+    <p style="margin-bottom:0.6em">Website: <a href="https://phl.upr.edu/hwc/data">phl.upr.edu/hwc/data</a>, maintained by the Planetary Habitability Laboratory, University of Puerto Rico at Arecibo. Downloaded directly as a CSV, not via API.</p>
+    <p style="margin:0">Matched against the NASA Exoplanet Archive pull by planet name: 5,565 of 6,366 planets found a match. The remaining 801 are planets confirmed after the catalog's last update and have not yet been assessed by it. Each matched planet carries an official habitability classification (not habitable, conservative sample, or optimistic sample) and an Earth Similarity Index score.</p>
   </div>
 
-  <div class="stub">
-    <span class="module-tag">To be added</span>
-    <p style="margin:0">A small preview of the raw data as pulled, before any cleaning, with a link to the full raw file.</p>
-  </div>
+  <p style="margin:0 0 1.6em">Full secondary source file: <a href="data/hwc_full.csv">hwc_full.csv</a> (5,599 rows, 118 columns).</p>
+
+  <figure>
+    <img src="assets/eda/raw_preview.png" alt="Preview of the first rows of raw exoplanet data pulled from the API">
+    <figcaption>A sample of the 6,366 confirmed planets pulled directly from the NASA Exoplanet Archive, before any cleaning.</figcaption>
+  </figure>
+
+  <p>Full raw file: <a href="data/exoplanets_raw.csv">exoplanets_raw.csv</a> (6,366 rows, 12 columns).</p>
 <div class="pipeline-nav"><a class="prev" href="index.html">&larr; Introduction</a><a class="next" href="cleaning_prep.html">Cleaning &amp; Prep &rarr;</a></div></main>
 <footer>
   Exoplanet Discovery &amp; Habitability. A semester project for a Machine Learning course, built module by module.

@@ -12,11 +12,31 @@
 <nav class="topnav"><span class="brand">Exoplanet Discovery &amp; Habitability</span><a href="index.html">Introduction</a><a href="data_gathering.html">Data Gathering</a><a href="cleaning_prep.html" class="active">Cleaning &amp; Prep</a><a href="eda.html">EDA</a><a href="clustering.html">Clustering</a><a href="pca.html">PCA</a><a href="naivebayes.html">NaiveBayes</a><a href="dectrees.html">DecTrees</a><a href="svms.html">SVMs</a><a href="regression.html">Regression</a><a href="nn.html">NN</a><a href="conclusions.html">Conclusions</a><a href="about_references.html">About / References</a></nav><main>
   <p class="eyebrow">Cleaning &amp; Prep</p>
   <h1>Cleaning &amp; Prep</h1>
-  <div class="stub">
-    <span class="module-tag">To be added</span>
-    <p style="margin:0 0 1em">This tab will show, side by side, what the raw data looked like and what it looked like after cleaning: missing values handled, incorrect or impossible values corrected, units standardized, and any columns added, removed, or normalized. Each step will be explained in plain language, not just shown.</p>
-    <p style="margin:0"><strong>Planned before/after items:</strong> missing radius, mass, or temperature values; unit consistency across NASA Exoplanet Archive and PHL Habitable Worlds Catalog columns; outlier orbital periods and masses; merging the two sources into one working table keyed by planet name.</p>
-  </div>
+
+  <p>The raw pull from the NASA Exoplanet Archive contained 6,366 confirmed planets across 12 columns. Checking it directly turned up no duplicate planet names and no negative or physically impossible values in any numeric column, so nothing needed to be discarded on those grounds. What it did contain was real missingness: several hundred planets are missing an equilibrium temperature, a stellar radius, or an orbital period, because not every confirmed planet has had every follow-up measurement taken. Rather than filling those gaps with estimated values this early, they were left as missing and documented, since the right way to handle them depends on which model uses that column later.</p>
+
+  <figure>
+    <img src="assets/eda/01_missingness.png" alt="Bar chart showing the percentage of missing values in each column">
+    <figcaption>Equilibrium temperature and stellar radius are missing most often, since a full follow-up characterization is not run for every confirmed planet.</figcaption>
+  </figure>
+
+  <p>One judgment call was made explicit rather than hidden: 157 planets have an estimated mass above roughly 13 Jupiter masses, the rough boundary where the literature starts calling an object a brown dwarf instead of a planet. These are still confirmed entries in the archive, so they were kept rather than deleted, but flagged with a new column, <code>is_borderline_massive</code>, so later analysis can include or exclude them deliberately instead of by accident.</p>
+
+  <p>Two new columns were also added by discretizing existing measurements, since several of the models coming up in later modules work better with categories than raw numbers. <code>size_class</code> groups each planet into Earth-sized, Super-Earth, Sub-Neptune/Neptune, or Giant based on radius. <code>temp_zone</code> groups each planet into Too Cold, Temperate, or Too Hot based on estimated equilibrium temperature, using roughly 200 to 320 Kelvin as the range where liquid water is plausible. Both are simple, transparent rules meant as a starting point, not a final answer.</p>
+
+  <p>The cleaned NASA data was then merged with the PHL Habitable Worlds Catalog by planet name. Of 6,366 planets, 5,565 matched, and each matched planet now carries the catalog's own habitability classification (not habitable, conservative sample, or optimistic sample) and its Earth Similarity Index. The 801 planets without a match were confirmed after the catalog's last update and simply have not been assessed by it yet, a gap in coverage rather than a data error. This merge matters more than the rough <code>temp_zone</code> estimate above, since it is a published, expert-reviewed classification rather than a simple temperature cutoff, and the two can now be compared directly.</p>
+
+  <figure>
+    <img src="assets/eda/clean_preview.png" alt="Preview of the cleaned data with new size_class and temp_zone columns">
+    <figcaption>The same planets after cleaning, now carrying a size class, a temperature zone, and a flag for borderline-massive objects.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/eda/12_top_esi_table.png" alt="Table of the 10 planets with the highest Earth Similarity Index">
+    <figcaption>The ten planets the Habitable Worlds Catalog currently rates most Earth-like, led by Teegarden's Star b and TOI-700 d, several of which now appear in every later analysis on this site.</figcaption>
+  </figure>
+
+  <p>Full cleaned and merged file: <a href="data/exoplanets_clean.csv">exoplanets_clean.csv</a> (6,366 rows, 20 columns). Cleaning and merging code: <a href="scripts/clean_and_visualize.py">clean_and_visualize.py</a> (Python, uses <code>pandas</code>).</p>
 <div class="pipeline-nav"><a class="prev" href="data_gathering.html">&larr; Data Gathering</a><a class="next" href="eda.html">EDA &rarr;</a></div></main>
 <footer>
   Exoplanet Discovery &amp; Habitability. A semester project for a Machine Learning course, built module by module.
