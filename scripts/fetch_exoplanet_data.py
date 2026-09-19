@@ -1,37 +1,41 @@
 """
 fetch_exoplanet_data.py
 
-Pulls confirmed-exoplanet data from the NASA Exoplanet Archive's public
-TAP (Table Access Protocol) API and saves it as a raw CSV for the
-DataPrep_EDA tab of the project.
+This pulls confirmed exoplanet data from the NASA Exoplanet Archive's public
+TAP (Table Access Protocol) API and saves it as a raw CSV for the DataPrep_EDA 
+tab of the project.
 
 No API key is required for the Exoplanet Archive TAP service.
 
 Usage:
     python fetch_exoplanet_data.py
 """
-
+# Importing Libraries
 import pandas as pd
 import requests
 
-# Core TAP endpoint
+# TAP STuff - table access protocol (like API request for astronomy)
+# what I'm doing after this "requests.get(TAP_URL, params=params)"- This is an HTTP request to a server, 
+# with structured parameters, returning structured data back (CSV) that the code parses programmatically.
+# That's precisely what an API is: a defined way for code to talk to a server and get data back.
+# no browser, no manual download, no clicking through a webpage etc.
 TAP_URL = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
 
 # Columns pulled from the Planetary Systems Composite Parameters table
 # (pscomppars): one best-estimate row per confirmed planet.
 COLUMNS = [
-    "pl_name",        # planet name
-    "hostname",       # host star name
+    "pl_name", # planet name
+    "hostname", # host star name
     "discoverymethod",# transit, radial velocity, imaging, microlensing, etc.
-    "disc_year",      # year of discovery
-    "pl_orbper",      # orbital period (days)
-    "pl_rade",        # planet radius (Earth radii)
-    "pl_bmasse",      # planet mass (Earth masses)
-    "pl_eqt",         # equilibrium temperature (K)
-    "st_teff",        # host star effective temperature (K)
-    "st_rad",         # host star radius (solar radii)
-    "st_mass",        # host star mass (solar masses)
-    "sy_dist",        # system distance from Earth (parsecs)
+    "disc_year", # year of discovery
+    "pl_orbper", # orbital period (days)
+    "pl_rade", # planet radius (Earth radii)
+    "pl_bmasse", # planet mass (Earth masses)
+    "pl_eqt", # equilibrium temperature (K)
+    "st_teff", # host star effective temperature (K)
+    "st_rad", # host star radius (solar radii)
+    "st_mass", # host star mass (solar masses)
+    "sy_dist", # system distance from Earth (parsecs)
 ]
 
 
@@ -41,13 +45,12 @@ def fetch_raw_data() -> pd.DataFrame:
     response = requests.get(TAP_URL, params=params, timeout=60)
     response.raise_for_status()
 
-    # requests.Response has .url with the final, fully-encoded GET URL.
-    # This is the exact request worth citing in the DataPrep_EDA writeup.
+    # requests.Response has .url with the final, fully encoded GET URL.
+    # This is the exact request in the DataPrep_EDA section on my site.
     print("Request URL:", response.url)
 
     from io import StringIO
     return pd.read_csv(StringIO(response.text))
-
 
 if __name__ == "__main__":
     df = fetch_raw_data()
