@@ -2,11 +2,11 @@
 clean_and_visualize.py
 
 Cleans the raw NASA Exoplanet Archive pull, merges in habitability labels
-from the PHL Habitable Worlds Catalog, and produces the visualizations and
-two data-preview images used on the Cleaning & Prep and EDA tabs.
+from the PHL Habitable Worlds Catalog and produces the visualizations and
+two data preview images used on the Cleaning & Prep and EDA tabs. Can also be found in 
+the .ipynb in the same git directory.
 
-Inputs (place these in the same folder as this script, or update the
-paths below):
+Inputs:
     exoplanets_raw.csv   from fetch_exoplanet_data.py
     hwc.csv              the "Full Catalog (CSV)" download from
                           phl.upr.edu/hwc/data
@@ -19,7 +19,7 @@ Outputs:
     charts/raw_preview.png, charts/clean_preview.png
 
 Usage (Colab or local):
-    pip install pandas matplotlib   # already installed in Colab by default
+    pip install pandas matplotlib
     python clean_and_visualize.py
 """
 import os
@@ -34,21 +34,35 @@ os.makedirs("charts", exist_ok=True)
 
 df = pd.read_csv("exoplanets_raw.csv")
 
-# ================= CLEANING =================
+# CLEANING
 clean = df.copy()
+# checking for duplicate planet names
+print("Duplicate planet names:", clean["pl_name"].duplicated().sum())
 
-# No duplicate planet names and no negative/zero physical values were found
-# in any numeric column on inspection, so nothing needed to be dropped on
-# those grounds. Missingness is left as NaN rather than imputed here, since
-# the right way to fill it depends on which model uses that column later.
+# checking for negative or zero values in the numeric columns, which would be
+# physically impossible for these measurements
+numeric_cols = ["pl_orbper", "pl_rade", "pl_bmasse", "pl_eqt", "st_teff", "st_rad", "st_mass", "sy_dist"]
+for col in numeric_cols:
+    n_bad = (clean[col] <= 0).sum()
+    print(f"{col}: {n_bad} values <= 0")
 
-# Flag planets above the ~13-Jupiter-mass (4131 Earth-mass) boundary, where
-# "planet" starts overlapping with "brown dwarf" by common convention.
-# Kept (they are confirmed in the archive) but flagged rather than treated
-# as ordinary planets silently.
+# checking how much is missing in each column
+print("\nMissing values per column:")
+print(clean.isna().sum())
+
+# 157 planets sit above the ~13 Jupiter mass (4131 Earth mass) boundary,
+# where "planet" starts overlapping with "brown dwarf" - flagged rather
+# than dropped, since they are still confirmed entries in the archive
 clean["is_borderline_massive"] = clean["pl_bmasse"] > 4131
+print("\nBorderline massive planets flagged:", clean["is_borderline_massive"].sum())
 
-# Discretize planet size into standard exoplanet-science size classes.
+#- Duplicate planet names and no negative/zero physical values were found in any numeric column on inspection, so nothing needed to be dropped on those grounds.
+#- Missingness is left as NaN rather than imputed here, since the right way to fill it depends on which model uses that column later.
+#- Flag planets above the ~13-Jupiter-mass (4131 Earth-mass)boundary, where "planet" starts overlapping with "brown dwarf" by common convention.
+#- Kept (they are confirmed in the archive) but flagged rather than treated as ordinary planets.
+#- As for the plots: JUST saving my images and charts in the back instead of plt.show() here.
+
+# Discretizing planet size into standard exoplanet-science size classes.
 def size_class(r):
     if pd.isna(r): return np.nan
     if r < 1.25: return "Earth-sized"
@@ -57,7 +71,7 @@ def size_class(r):
     return "Giant"
 clean["size_class"] = clean["pl_rade"].apply(size_class)
 
-# Discretize equilibrium temperature into a rough habitability zone.
+# Discretizing equilibrium temperature into a rough habitability zone.
 # ~200-320 K is the loose range where liquid water is plausible.
 def temp_zone(t):
     if pd.isna(t): return np.nan
@@ -66,15 +80,14 @@ def temp_zone(t):
     return "Too Hot"
 clean["temp_zone"] = clean["pl_eqt"].apply(temp_zone)
 
-# ================= MERGE WITH PHL HABITABLE WORLDS CATALOG =================
+# MERGING WITH PHL HABITABLE WORLDS CATALOG
 hwc = pd.read_csv("hwc.csv")
 hwc_cols = hwc[["P_NAME", "P_HABITABLE", "P_ESI", "P_TYPE",
                 "P_HABZONE_OPT", "P_HABZONE_CON"]].rename(columns={"P_NAME": "pl_name"})
 
 clean = clean.merge(hwc_cols, on="pl_name", how="left")
 clean["hwc_habitable_label"] = clean["P_HABITABLE"].map(
-    {0: "Not habitable", 1: "Conservative sample", 2: "Optimistic sample"}
-)
+    {0: "Not habitable", 1: "Conservative sample", 2: "Optimistic sample"})
 
 clean.to_csv("exoplanets_clean.csv", index=False)
 print("Cleaned + merged file saved:", clean.shape)
@@ -82,7 +95,7 @@ print(clean["size_class"].value_counts(dropna=False))
 print(clean["temp_zone"].value_counts(dropna=False))
 print(clean["hwc_habitable_label"].value_counts(dropna=False))
 
-# ================= PREVIEW TABLE IMAGES =================
+# TO PREVIEW TABLE IMAGES
 def save_table_image(d, cols, fname, title):
     sample = d[cols].head(6)
     fig, ax = plt.subplots(figsize=(11, 2.2))
@@ -101,7 +114,7 @@ save_table_image(df, ["pl_name", "hostname", "discoverymethod", "disc_year", "pl
 save_table_image(clean, ["pl_name", "pl_rade", "size_class", "pl_eqt", "temp_zone", "is_borderline_massive"],
                   "clean_preview.png", "Cleaned data (derived columns added)")
 
-# ================= VISUALIZATIONS =================
+# VISUALIZATIONS
 
 # 1. Missingness per column
 miss = df.isna().mean().sort_values(ascending=False) * 100
@@ -215,3 +228,4 @@ plt.savefig("charts/12_top_esi_table.png", dpi=150, bbox_inches="tight")
 plt.close()
 
 print("All charts saved to charts/")
+# All charts saved to charts/ means the charts are saved in the Colab backend as opposed to explicitly being pulled up on the main notebook. 
