@@ -12,15 +12,64 @@
 <nav class="topnav"><span class="brand">Exoplanet Discovery &amp; Habitability</span><a href="index.html">Introduction</a><a href="data_gathering.html">Data Gathering</a><a href="cleaning_prep.html">Cleaning &amp; Prep</a><a href="eda.html">EDA</a><a href="clustering.html" class="active">Clustering</a><a href="pca.html">PCA</a><a href="naivebayes.html">NaiveBayes</a><a href="dectrees.html">DecTrees</a><a href="svms.html">SVMs</a><a href="regression.html">Regression</a><a href="nn.html">NN</a><a href="conclusions.html">Conclusions</a><a href="about_references.html">About / References</a></nav><main>
   <p class="eyebrow">Clustering</p>
   <h1>Clustering</h1>
-  <div class="stub">
-    <span class="module-tag">Content added in Module 2</span>
-    <p style="margin:0 0 1em">This tab will walk through Clustering in four parts, tied back to the
-    project's central question:</p>
-    <p style="margin:0 0 0.4em"><strong>Overview.</strong> What the method does and why it fits this question.</p>
-    <p style="margin:0 0 0.4em"><strong>Data.</strong> The prepared dataset used for this method, with links to raw and cleaned data.</p>
-    <p style="margin:0 0 0.4em"><strong>Code.</strong> A link to the code, with the language and core packages noted.</p>
-    <p style="margin:0"><strong>Results.</strong> What the output shows, and what it means for the question above, not just the metric.</p>
-  </div>
+
+  <h2>Overview</h2>
+  <p>Clustering is an unsupervised method: it looks for structure in data that has no labels to begin with, grouping observations that are similar to each other and separating ones that are not. Two broad families of clustering were used here. Partitional clustering, specifically k-means, picks a fixed number of groups ahead of time and assigns every point to whichever group center it is closest to, adjusting the centers until the assignment stabilizes. Hierarchical clustering takes a different approach: it starts with every point as its own group and repeatedly merges the two closest groups, building a nested tree of merges rather than a single flat partition. Both families need a notion of distance between points, and the choice of distance measure matters. Euclidean distance measures straight-line distance between two points and is sensitive to the overall scale of each value. Cosine distance instead measures the angle between two points treated as vectors, ignoring their magnitude entirely, which makes it a natural fit when the direction of a pattern matters more than its size.</p>
+
+  <figure>
+    <img src="assets/m2/concept_partitional_vs_hierarchical.png" alt="Side-by-side illustration of partitional clustering versus hierarchical clustering">
+    <figcaption>Partitional clustering assigns points to a fixed number of flat groups; hierarchical clustering instead builds a nested tree of merges.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/m2/concept_distance_metrics.png" alt="Diagram comparing Euclidean distance and cosine distance between two points">
+    <figcaption>Euclidean distance is the straight-line gap between two points; cosine distance is the angle between them, regardless of how far out each point sits.</figcaption>
+  </figure>
+
+  <p>Here, clustering is used for discovery rather than prediction: the goal is to see whether confirmed exoplanets naturally separate into a handful of recognizable physical types, or whether they instead form a continuum with no sharp boundaries, directly picking up the question raised in the Introduction about the sub-Neptune and other planets with no Solar System counterpart.</p>
+
+  <h2>Data Prep</h2>
+  <p>Clustering requires only unlabeled numeric data, so the categorical columns (planet name, discovery method, size class label, and so on) were dropped entirely for this step. Eight numeric columns were used: orbital period, planet radius, planet mass, equilibrium temperature, host star temperature, host star radius, host star mass, and system distance. Rows missing any of these eight values were excluded, leaving 5,676 of the original 6,366 planets. Because these properties span several orders of magnitude (orbital period alone ranges from a fraction of a day to over a million years), each column was log-transformed and then standardized to zero mean and unit variance before clustering, so that no single feature dominates the distance calculation purely because of its raw scale.</p>
+
+  <figure>
+    <img src="assets/m2/cluster_data_preview.png" alt="Preview of the log-transformed numeric data used for clustering">
+    <figcaption>A sample of the eight log-transformed numeric features, after standardization, that both k-means and hierarchical clustering were run on.</figcaption>
+  </figure>
+
+  <p>Full prepared data: <a href="data/exoplanets_clean.csv">exoplanets_clean.csv</a> (the raw and cleaned files behind it are linked from Data Gathering and Cleaning &amp; Prep).</p>
+
+  <h2>Code</h2>
+  <p>K-means and hierarchical clustering code: <a href="scripts/clustering_pca.py">clustering_pca.py</a> (Python, uses <code>scikit-learn</code> and <code>scipy</code>).</p>
+
+  <h2>Results</h2>
+  <p>K-means was run at four values of k (2, 3, 4, and 5), and the average silhouette score, a measure of how well-separated the resulting clusters are, was computed for each. The scores were close across the board (0.33 to 0.36), with k=3 and k=5 essentially tied for the best score and k=4 slightly behind both. This is itself informative: there is no single value of k that stands out sharply, which suggests the underlying population does not split into perfectly crisp groups.</p>
+
+  <figure>
+    <img src="assets/m2/silhouette_by_k.png" alt="Line chart of average silhouette score across different values of k">
+    <figcaption>Silhouette scores for k = 2 through 7. The curve is relatively flat between k=3 and k=5, with no single value standing out as a clearly correct choice.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/m2/kmeans_clusters_pca.png" alt="Scatter plot of k-means clusters shown in PC1/PC2 space">
+    <figcaption>K-means clusters at k=5, the best-scoring value, shown in the same PC1/PC2 space used on the PCA tab. The clusters sit closer to overlapping regions than to sharply separated islands.</figcaption>
+  </figure>
+
+  <p>Hierarchical clustering was run using cosine distance with average linkage (cosine distance cannot be combined with Ward or centroid linkage, so average linkage was used instead). The resulting dendrogram shows one especially large jump in merge distance right at the final merge, a common heuristic for reading how many clusters a dendrogram actually supports, and that jump points to just 2 clusters as the most defensible cut.</p>
+
+  <figure>
+    <img src="assets/m2/dendrogram.png" alt="Dendrogram of hierarchical clustering with cosine distance, truncated to the last 30 merges">
+    <figcaption>The large jump in height at the very top of the tree, going from 2 clusters to 1, is much bigger than any other merge nearby, which is why the dendrogram points to 2 clusters.</figcaption>
+  </figure>
+
+  <p>Comparing the two methods directly: cutting the hierarchical tree at k=5 (to match k-means) and measuring agreement with the Adjusted Rand Index gives a score of 0.41, out of a maximum of 1.0 for perfect agreement. That is a moderate but incomplete overlap, the two methods agree there is more than one group, but settle on different boundaries.</p>
+
+  <figure>
+    <img src="assets/m2/kmeans_vs_hclust.png" alt="Heatmap showing how k-means and hierarchical clustering assignments overlap">
+    <figcaption>Where the two methods agree, nearly all of one k-means cluster falls inside a single hierarchical cluster; where they disagree, a k-means cluster is split across several hierarchical branches.</figcaption>
+  </figure>
+
+  <h2>Conclusions</h2>
+  <p>Neither method found sharply separated groups of exoplanets, and that is itself a finding that matters for the topic. The flat silhouette curve, the moderate agreement between k-means and hierarchical clustering, and the dendrogram's preference for a small number of clusters together suggest that exoplanet physical properties form more of a continuum than a set of distinct categories, echoing the sub-Neptune problem raised in the Introduction: common size and mass ranges really do blur together rather than falling into tidy bins. That has a direct bearing on the central question. A population of planets this continuous means that any attempt to flag "potentially habitable" worlds based on physical properties alone, including the rough temperature-zone rule used in Cleaning &amp; Prep, is drawing a somewhat arbitrary line across what is actually a gradient, not a boundary nature has clearly drawn.</p>
 <div class="pipeline-nav"><a class="prev" href="eda.html">&larr; EDA</a><a class="next" href="pca.html">PCA &rarr;</a></div></main>
 <footer>
   Exoplanet Discovery &amp; Habitability. A semester project for a Machine Learning course, built module by module.
