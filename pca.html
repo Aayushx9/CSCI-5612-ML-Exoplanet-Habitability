@@ -12,15 +12,55 @@
 <nav class="topnav"><span class="brand">Exoplanet Discovery &amp; Habitability</span><a href="index.html">Introduction</a><a href="data_gathering.html">Data Gathering</a><a href="cleaning_prep.html">Cleaning &amp; Prep</a><a href="eda.html">EDA</a><a href="clustering.html">Clustering</a><a href="pca.html" class="active">PCA</a><a href="naivebayes.html">NaiveBayes</a><a href="dectrees.html">DecTrees</a><a href="svms.html">SVMs</a><a href="regression.html">Regression</a><a href="nn.html">NN</a><a href="conclusions.html">Conclusions</a><a href="about_references.html">About / References</a></nav><main>
   <p class="eyebrow">PCA</p>
   <h1>PCA</h1>
-  <div class="stub">
-    <span class="module-tag">Content added in Module 2</span>
-    <p style="margin:0 0 1em">This tab will walk through PCA in four parts, tied back to the
-    project's central question:</p>
-    <p style="margin:0 0 0.4em"><strong>Overview.</strong> What the method does and why it fits this question.</p>
-    <p style="margin:0 0 0.4em"><strong>Data.</strong> The prepared dataset used for this method, with links to raw and cleaned data.</p>
-    <p style="margin:0 0 0.4em"><strong>Code.</strong> A link to the code, with the language and core packages noted.</p>
-    <p style="margin:0"><strong>Results.</strong> What the output shows, and what it means for the question above, not just the metric.</p>
-  </div>
+
+  <h2>Overview</h2>
+  <p>Principal Component Analysis (PCA) is a dimensionality reduction technique: it takes data described by many correlated numeric variables and re-expresses it using a smaller number of new variables, called principal components, that capture as much of the original variation as possible. Each principal component is a direction in the original feature space, found from the eigenvectors of the data's covariance matrix. The eigenvector points in the direction of a pattern of variation, and its paired eigenvalue measures how much of the data's total variance lies along that direction. The first principal component is the eigenvector with the largest eigenvalue, the direction along which the data spreads out the most; each following component captures the next largest share of remaining variance, at a right angle to all the ones before it.</p>
+
+  <figure>
+    <img src="assets/m2/concept_eigenvectors.png" alt="Illustration of eigenvectors pointing along the directions of greatest spread in a 2D dataset">
+    <figcaption>Eigenvectors point along the directions a dataset spreads out the most; eigenvalues measure how much variance lies along each direction.</figcaption>
+  </figure>
+
+  <p>High-dimensional data is difficult to explore directly: a dataset with eight numeric columns, as used here, cannot be plotted on a single chart, and many pairs of those columns are correlated with each other in ways that are hard to see from any one scatter plot alone. Reducing many correlated variables down to two or three principal components makes it possible to visualize the overall shape of the data, spot outliers, and see which original variables move together, all without inspecting every pairwise combination by hand.</p>
+
+  <figure>
+    <img src="assets/m2/concept_dim_reduction.png" alt="Illustration of 2D data projected onto a single line representing the first principal component">
+    <figcaption>Dimensionality reduction projects correlated data onto a smaller number of axes, each one a direction chosen to preserve as much of the original spread as possible.</figcaption>
+  </figure>
+
+  <h2>Data Prep</h2>
+  <p>PCA requires numeric data on a common scale, the same requirement as clustering. The same eight log-transformed, standardized features and the same 5,676 complete rows used for clustering were used here as well, so the two analyses are directly comparable.</p>
+
+  <figure>
+    <img src="assets/m2/cluster_data_preview.png" alt="Preview of the log-transformed numeric data used for PCA">
+    <figcaption>The same prepared feature set used for clustering: eight log-transformed, standardized numeric columns.</figcaption>
+  </figure>
+
+  <p>Full prepared data: <a href="data/exoplanets_clean.csv">exoplanets_clean.csv</a>.</p>
+
+  <h2>Code</h2>
+  <p>PCA code: <a href="scripts/clustering_pca.py">clustering_pca.py</a> (Python, uses <code>scikit-learn</code>).</p>
+
+  <h2>Results</h2>
+  <p>The first two principal components together explain about 72% of the total variance in the eight original features, and the first three explain about 85%. Looking at which original features load most heavily onto each component gives the components physical meaning rather than leaving them as abstract numbers: PC1 loads positively on planet radius, planet mass, stellar radius, and stellar mass, reading roughly as an overall "how big is this planet and its star" axis. PC2 loads positively on equilibrium temperature and system distance but negatively on orbital period, reading roughly as a "how close-in and hot is this planet" axis.</p>
+
+  <figure>
+    <img src="assets/m2/pca_scree.png" alt="Scree plot showing the proportion of variance explained by each principal component">
+    <figcaption>PC1 and PC2 together account for about 72% of the total variance; the remaining six components each add comparatively little.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/m2/pca_pc1_pc2.png" alt="Scatter plot of exoplanets projected onto the first two principal components">
+    <figcaption>Every planet reduced from eight dimensions to two. The same lack of sharp separation seen in clustering shows up here too, as one continuous cloud rather than distinct islands.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/m2/pca_loadings.png" alt="Biplot showing which original features drive PC1 and PC2">
+    <figcaption>Planet radius and mass point one direction, equilibrium temperature and system distance point another, which is what gives PC1 and PC2 their physical meaning.</figcaption>
+  </figure>
+
+  <h2>Conclusions</h2>
+  <p>PCA reinforces what clustering already suggested: the eight physical properties measured for each confirmed exoplanet are not independent of each other, planet size and mass move together, and orbital distance and temperature move together, which is exactly why two components can summarize 72% of eight columns' worth of information. But the projection onto PC1 and PC2 shows one continuous cloud of points rather than separated groups, the same conclusion clustering reached by a completely different method. Taken together, the two analyses point toward the same answer to the project's central question: the properties that would distinguish a potentially habitable planet from the rest of the population do not form a separate, easily isolated cluster, they sit along the same continuum as everything else, which is part of why only a small number of planets end up confidently labeled as habitability candidates at all.</p>
 <div class="pipeline-nav"><a class="prev" href="clustering.html">&larr; Clustering</a><a class="next" href="naivebayes.html">NaiveBayes &rarr;</a></div></main>
 <footer>
   Exoplanet Discovery &amp; Habitability. A semester project for a Machine Learning course, built module by module.
