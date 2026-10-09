@@ -23,12 +23,11 @@ from sklearn.metrics import silhouette_score, adjusted_rand_score
 from sklearn.decomposition import PCA
 from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
 from scipy.spatial.distance import pdist
-
 os.makedirs("charts", exist_ok=True)
 
 df = pd.read_csv("exoplanets_clean.csv")
 
-# ================= DATA PREP =================
+# DATA PREP
 # Clustering and PCA need unlabeled numeric data only, so just the eight
 # physical measurement columns are used here, with rows missing any of
 # them dropped.
@@ -46,7 +45,7 @@ X_log.columns = [c + "_log" for c in numeric_cols]
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X_log)
 
-# ================= K-MEANS =================
+#  K-MEANS 
 silhouette_by_k = {}
 for k in range(2, 8):
     km = KMeans(n_clusters=k, random_state=42, n_init=10)
@@ -73,7 +72,7 @@ plt.tight_layout()
 plt.savefig("charts/silhouette_by_k.png", dpi=150)
 plt.close()
 
-# ================= PCA (computed early so clusters can be visualized in PC space) =================
+# PCA (computed early so clusters can be visualized in PC space) 
 pca = PCA()
 pcs = pca.fit_transform(X_scaled)
 evr = pca.explained_variance_ratio_
@@ -93,7 +92,7 @@ plt.tight_layout()
 plt.savefig("charts/kmeans_clusters_pca.png", dpi=150)
 plt.close()
 
-# ================= HIERARCHICAL CLUSTERING (cosine distance) =================
+# HIERARCHICAL CLUSTERING (cosine distance) 
 # cosine distance can't be combined with ward/centroid linkage, so average
 # linkage is used instead
 dist = pdist(X_scaled, metric="cosine")
@@ -108,7 +107,7 @@ plt.tight_layout()
 plt.savefig("charts/dendrogram.png", dpi=150)
 plt.close()
 
-# read the dendrogram's own suggested k from the biggest jump in merge height
+# reading the dendrogram's own suggested k from the biggest jump in merge height
 # among the last several merges
 last_merges = Z[-10:, 2]
 diffs = np.diff(last_merges)
@@ -116,7 +115,7 @@ jump_idx = np.argmax(diffs)
 suggested_k = len(last_merges) - jump_idx
 print("Dendrogram-suggested k (largest merge-height jump):", suggested_k)
 
-# compare k-means and hierarchical clustering at the same k
+# comparing k-means and hierarchical clustering at the same k
 hclust_labels = fcluster(Z, t=best_k, criterion="maxclust")
 ari = adjusted_rand_score(kmeans_labels, hclust_labels)
 print(f"Adjusted Rand Index, k-means vs hierarchical at k={best_k}:", round(ari, 4))
@@ -137,7 +136,7 @@ plt.tight_layout()
 plt.savefig("charts/kmeans_vs_hclust.png", dpi=150)
 plt.close()
 
-# ================= PCA VISUALIZATIONS =================
+# PCA VISUALIZATIONS 
 plt.figure(figsize=(7, 4.5))
 plt.bar(range(1, len(evr) + 1), evr)
 plt.plot(range(1, len(evr) + 1), np.cumsum(evr), marker="o", color="black", label="Cumulative")
@@ -169,4 +168,4 @@ plt.tight_layout()
 plt.savefig("charts/pca_loadings.png", dpi=150)
 plt.close()
 
-print("All Module 2 charts saved to charts/")
+print("Module 2 charts saved to charts/")
