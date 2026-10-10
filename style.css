@@ -113,16 +113,6 @@ main {
 figure { margin: 2em 0; max-width: var(--max-width); }
 figure svg, figure img { width: 100%; height: auto; display: block; }
 
-/* chart images (white background) sit on a light card so they look like
-   figures placed on the page instead of clashing with the dark theme */
-figure img[src*="assets/eda"],
-figure img[src*="assets/m2"] {
-  background: #ffffff;
-  padding: 14px;
-  border-radius: 6px;
-  border: 1px solid var(--panel-line);
-  box-sizing: border-box;
-}
 figcaption { font-size: 0.88rem; color: var(--text-dim); margin-top: 0.6em; }
 
 ol.questions { max-width: var(--max-width); padding-left: 1.3em; }
