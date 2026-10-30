@@ -23,3 +23,10 @@ Derived from exoplanets_raw.csv, merged with habitability labels and the Earth
 Similarity Index from hwc_full.csv. Because this file builds on PHL's licensed
 data, it carries the same license forward: attribution required, non-commercial
 use only, share-alike if redistributed further.
+
+## labeled_sample.csv, train_set.csv, test_set.csv
+Derived from exoplanets_clean.csv, which carries the PHL Habitable Worlds Catalog
+habitability labels. The yes/no habitable label in these files comes from that
+catalog, so they carry the same license forward: attribution required,
+non-commercial use only, share-alike if redistributed further. train_set.csv and
+test_set.csv are a random 70/30 split of labeled_sample.csv with no planet in both.
