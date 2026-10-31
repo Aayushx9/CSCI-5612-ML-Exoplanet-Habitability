@@ -1,5 +1,5 @@
-# Module 3 data prep: build the labeled dataset and split it into training and testing sets.
-# Input:  exoplanets_clean.csv (from clean_and_visualize.py)
+# Module 3 data prep: building the labeled dataset and split it into training and testing sets.
+# Input: exoplanets_clean.csv (from clean_and_visualize.py)
 # Output: labeled_sample.csv, train_set.csv, test_set.csv, plus small preview images in charts/
 
 import os
@@ -9,7 +9,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
-# same dark theme as the other scripts so every chart on the site matches
+# keeping the dark bg going :)
 BG, PANEL, LINE = "#0b0f1a", "#131a2b", "#232d47"
 TEXT, DIM = "#e9e7e1", "#9aa3bd"
 GOLD, TEAL, RUST = "#e8a33d", "#4a95a0", "#c1502e"
