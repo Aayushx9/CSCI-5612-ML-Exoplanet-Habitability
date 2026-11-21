@@ -1,7 +1,6 @@
 # Module 4: linear regression and logistic regression.
-# Input:  train_set.csv, test_set.csv (from prep_train_test.py)
-# Output: regression charts in charts/
-
+# Input:train_set.csv, test_set.csv (from prep_train_test.py)
+# Output:regression charts in charts/
 import os
 import numpy as np
 import pandas as pd
@@ -29,17 +28,14 @@ os.makedirs("charts", exist_ok=True)
 train = pd.read_csv("train_set.csv")
 test = pd.read_csv("test_set.csv")
 
-# ================= LINEAR REGRESSION =================
-# target: planet mass (log10 Earth masses), a number. Predictors: the other seven
-# measurements, also log10, since these span several orders of magnitude and the
-# mass-radius relationship is close to a straight line on log-log axes.
+# LINEAR REGRESSION
+# target: planet mass (log10 Earth masses), a number. 
+# Predictors: the other 7 measurements, also log10, since these span several orders of magnitude and the mass-radius relationship is close to a straight line on log-log axes.
 predictors = ["pl_orbper", "pl_rade", "pl_eqt", "st_teff", "st_rad", "st_mass", "sy_dist"]
 
-# Many planets in the archive's composite table have one of mass or radius filled in from
-# the other with a published piecewise mass-radius formula (Chen and Kipping style:
+# Many planets in the archive's composite table have one of mass or radius filled in from the other with a published piecewise mass-radius formula (Chen and Kipping style:
 # R = 1.008 M^0.279 below 2.04 Earth masses, 0.808 M^0.589 up to 131.6, 17.74 M^-0.044 above).
-# A planet within 1% of that curve is flagged, because for it the mass is close to a formula
-# of the radius and not an independent measurement.
+# A planet within 1% of that curve is flagged, because for it the mass is close to a formula of the radius and not an independent measurement.
 def on_formula_curve(d):
     M = d["pl_bmasse"]
     r_formula = np.where(M < 2.04, 1.008 * M ** 0.279, np.where(M < 131.6, 0.808 * M ** 0.589, 17.74 * M ** -0.044))
@@ -106,9 +102,8 @@ plt.xlabel("Coefficient (change in log10 mass per 1 change in log10 predictor)")
 plt.title("Linear regression coefficients")
 plt.tight_layout(); plt.savefig("charts/lin_coefficients.png", dpi=150); plt.close()
 
-# ================= LOGISTIC REGRESSION =================
-# label: habitable (0 or 1). Predictors: all eight measurements, log10 then
-# standardized (scaler fit on the training set only) so coefficients are comparable.
+# LOGISTIC REGRESSION
+# label: habitable (0 or 1). Predictors: all eight measurements, log10 then standardized (scaler fit on the training set only) so coefficients are comparable.
 features = ["pl_orbper", "pl_rade", "pl_bmasse", "pl_eqt", "st_teff", "st_rad", "st_mass", "sy_dist"]
 scaler = StandardScaler().fit(np.log10(train[features]))
 A_train = scaler.transform(np.log10(train[features]))
@@ -155,8 +150,8 @@ plt.xlabel("Coefficient (change in log-odds per 1 standard deviation)")
 plt.title("Logistic regression coefficients (default model)")
 plt.tight_layout(); plt.savefig("charts/logit_coefficients.png", dpi=150); plt.close()
 
-# ================= COMPARISON WITH NAIVE BAYES (Part 3) =================
-# same recipe as naive_bayes.py: log10, scale to 0-1, equal prior
+# COMPARISON WITH NAIVE BAYES (Part 3)
+# same gig as naive_bayes.py: log10, scale to 0-1, equal prior
 Xn_train = np.log10(train[features]); Xn_test = np.log10(test[features])
 mm = MinMaxScaler().fit(Xn_train)
 nb = MultinomialNB(fit_prior=False).fit(mm.transform(Xn_train), yb_train)
