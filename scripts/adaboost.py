@@ -34,11 +34,9 @@ test = pd.read_csv("test_set.csv")
 clean = pd.read_csv("exoplanets_clean.csv")
 numeric = ["pl_orbper", "pl_rade", "pl_bmasse", "pl_eqt", "st_teff", "st_rad", "st_mass", "sy_dist"]
 
-# ================= ONE-HOT ENCODING =================
-# scikit-learn's AdaBoost needs numbers only. The eight measurements are already numeric,
-# but how a planet was discovered (transit, radial velocity, ...) is a category. Each method
-# becomes its own 0/1 column. Columns are built from the training set, and the testing set
-# is lined up to the same columns, so a method that only appears in the testing set is ignored.
+# ONE-HOT ENCODING
+# scikit-learn's AdaBoost needs numbers only. The eight measurements are already numeric, but how a planet was discovered (transit, radial velocity, ...) is a category. Each method becomes its own 0/1 column.
+# Columns are built from the training set, and the testing set is lined up to the same columns, so a method that only appears in the testing set is ignored.
 method = clean.set_index("pl_name")["discoverymethod"]
 train["discoverymethod"] = train["pl_name"].map(method)
 test["discoverymethod"] = test["pl_name"].map(method)
@@ -77,9 +75,8 @@ def make_model(n, lr):
     return AdaBoostClassifier(estimator=DecisionTreeClassifier(max_depth=1),
                               n_estimators=n, learning_rate=lr, random_state=42)
 
-# ================= TUNING =================
-# the testing set is not touched here. Rounds and learning rate are chosen with 5-fold
-# cross-validation inside the training set: each fold is held out as validation data once.
+# TUNING
+# the testing set is not touched here. Rounds and learning rate are chosen with 5-fold cross-validation inside the training set: each fold is held out as validation data once.
 # staged_predict gives the prediction after every round, so one fit covers all round counts.
 rounds = 200
 learning_rates = [0.01, 0.1, 0.5, 1.0]
@@ -93,8 +90,7 @@ for lr in learning_rates:
             acc_curves[lr][r] += accuracy_score(y_train.iloc[val_idx], p) / 5
             f1_curves[lr][r] += f1_score(y_train.iloc[val_idx], p, zero_division=0) / 5
 
-# accuracy barely moves (98.7% of planets are not habitable), so the choice uses F1 on the
-# habitable class, which does react to finding the rare planets
+# accuracy barely moves (98.7% of planets are not habitable), so the choice uses F1 on the habitable class, which does react to finding the rare planets
 best_lr, best_n, best_f1 = None, None, -1
 for lr in learning_rates:
     r = int(np.argmax(f1_curves[lr]))
@@ -116,7 +112,7 @@ axes[1].set_xlabel("Boosting rounds"); axes[1].set_ylabel("Validation F1 (habita
 axes[1].set_title("Validation F1 by round")
 plt.tight_layout(); plt.savefig("charts/ada_tuning.png", dpi=150); plt.close()
 
-# ================= FINAL MODELS ON THE TESTING SET =================
+# FINAL MODELS ON THE TESTING SET
 def evaluate(name, model, Xtr, Xte):
     model.fit(Xtr, y_train)
     p = model.predict(Xte)
