@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav class="topnav"><span class="brand">Exoplanet Discovery &amp; Habitability</span><a href="index.html">Introduction</a><a href="data_gathering.html">Data Gathering</a><a href="cleaning_prep.html">Cleaning &amp; Prep</a><a href="eda.html">EDA</a><a href="clustering.html">Clustering</a><a href="pca.html">PCA</a><a href="naivebayes.html">NaiveBayes</a><a href="dectrees.html" class="active">DecTrees</a><a href="svms.html">SVMs</a><a href="regression.html">Regression</a><a href="nn.html">NN</a><a href="conclusions.html">Conclusions</a><a href="about_references.html">About / References</a></nav><main>
+<nav class="topnav"><span class="brand">Exoplanet Discovery &amp; Habitability</span><a href="index.html">Introduction</a><a href="data_gathering.html">Data Gathering</a><a href="cleaning_prep.html">Cleaning &amp; Prep</a><a href="eda.html">EDA</a><a href="clustering.html">Clustering</a><a href="pca.html">PCA</a><a href="naivebayes.html">NaiveBayes</a><a href="dectrees.html" class="active">DecTrees</a><a href="regression.html">Regression</a><a href="adaboost.html">AdaBoost</a><a href="gradientboosting.html">GradientBoosting</a><a href="xgboost.html">XGBoost</a><a href="conclusions.html">Conclusions</a><a href="about_references.html">About / References</a></nav><main>
   <p class="eyebrow">Decision Trees</p>
   <h1>Decision Trees</h1>
 
@@ -90,7 +90,7 @@
 
   <h2>Conclusions</h2>
   <p>The trees point to a simple profile for a planet the catalog lists as habitable. In the labeled data, those planets have radii between 0.8 and 3.0 Earth radii and a median equilibrium temperature of 266 K, and the trees keep returning to the same few measurements to find them: a moderate equilibrium temperature, a small to medium size, and in Tree 1 a very cool host star. Tree 3 relies on equilibrium temperature for about 82% of its importance and radius for the remaining 18%. This is a much better balance than Naive Bayes reached, since all three trees found 18 of the 20 habitable planets in the testing set while raising between 12 and 33 false alarms, against 253 for Naive Bayes with equal priors. The result also supports the earlier clustering finding: there is no sharp wall around habitable planets, but there is a recognizable region of measurement space where most of them sit. Two cautions apply. The catalog's habitable criteria are built from quantities closely related to these same measurements, so the trees are partly rediscovering the catalog's own rules. And with only 20 habitable planets in the testing set, each planet is worth five points of recall, and the trees used simple depth limits and were not tuned, so the exact numbers should be read as rough.</p>
-<div class="pipeline-nav"><a class="prev" href="naivebayes.html">&larr; NaiveBayes</a><a class="next" href="svms.html">SVMs &rarr;</a></div></main>
+<div class="pipeline-nav"><a class="prev" href="naivebayes.html">&larr; NaiveBayes</a><a class="next" href="regression.html">Regression &rarr;</a></div></main>
 <footer>
   Exoplanet Discovery &amp; Habitability. A semester project for a Machine Learning course, built module by module.
 </footer>
