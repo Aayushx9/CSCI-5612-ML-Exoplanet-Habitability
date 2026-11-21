@@ -11,8 +11,8 @@ A semester-long data science project built module by module: gathering, cleaning
 | Introduction, Data Gathering, Cleaning & Prep, EDA | 1 | Complete |
 | Clustering, PCA | 2 | Complete |
 | Naive Bayes, Decision Trees | 3 | Complete |
-| SVMs | 4 | Not started |
-| Regression, NN, Conclusions | 5 | Not started |
+| Regression, AdaBoost | 4 | Complete |
+| GradientBoosting, XGBoost, Conclusions | Later | Not started |
 
 ## Project structure
 
@@ -25,14 +25,15 @@ clustering.html         K-means and hierarchical clustering
 pca.html                Principal component analysis
 naivebayes.html         Multinomial Naive Bayes
 dectrees.html           Decision trees
-svms.html               Module 4
-regression.html         Module 5
-nn.html                 Module 5
-conclusions.html        Module 5
+regression.html         Linear and logistic regression
+adaboost.html           AdaBoost
+gradientboosting.html   Later module
+xgboost.html            Later module
+conclusions.html        Final, plain-language answer
 about_references.html   Bio, cited sources, code link
 style.css               Shared site styling
 build.py                Regenerates the HTML pages from templates
-assets/                 Images (eda/, m2/, m3/) and the transit diagram
+assets/                 Images (eda/, m2/, m3/, m4/) and the transit diagram
 data/                   CSV files (raw, cleaned, labeled, train, test, PHL catalog)
 scripts/                Python code for every analysis step
 ```
@@ -65,6 +66,8 @@ Each script reads its inputs from the folder it is run in and writes charts to a
 | 4 | `scripts/prep_train_test.py` | `exoplanets_clean.csv` | `labeled_sample.csv`, `train_set.csv`, `test_set.csv` |
 | 5 | `scripts/naive_bayes.py` | `train_set.csv`, `test_set.csv` | Naive Bayes confusion matrices |
 | 6 | `scripts/decision_trees.py` | `train_set.csv`, `test_set.csv` | three trees, confusion matrices, feature importance |
+| 7 | `scripts/regression.py` | `train_set.csv`, `test_set.csv` | linear and logistic regression charts |
+| 8 | `scripts/adaboost.py` | `train_set.csv`, `test_set.csv`, `exoplanets_clean.csv` | AdaBoost tuning curves, confusion matrices, comparisons |
 
 ## Regenerating the site
 
