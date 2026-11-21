@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AdaBoost - Exoplanet Discovery &amp; Habitability</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="topnav"><span class="brand">Exoplanet Discovery &amp; Habitability</span><a href="index.html">Introduction</a><a href="data_gathering.html">Data Gathering</a><a href="cleaning_prep.html">Cleaning &amp; Prep</a><a href="eda.html">EDA</a><a href="clustering.html">Clustering</a><a href="pca.html">PCA</a><a href="naivebayes.html">NaiveBayes</a><a href="dectrees.html">DecTrees</a><a href="regression.html">Regression</a><a href="adaboost.html" class="active">AdaBoost</a><a href="gradientboosting.html">GradientBoosting</a><a href="xgboost.html">XGBoost</a><a href="conclusions.html">Conclusions</a><a href="about_references.html">About / References</a></nav><main>
+  <p class="eyebrow">AdaBoost</p>
+  <h1>AdaBoost</h1>
+
+  <h2>Overview</h2>
+  <p>Boosting builds one strong classifier out of many weak ones that are trained one after another, each aimed at the mistakes of the models before it. That is the key difference from bagging, as in a random forest, where many trees are grown independently on random resamples of the data and then averaged. Bagging mainly reduces how much a single tree's answer jumps around, while boosting mainly reduces the systematic errors of a simple model by keeping attention on the cases it keeps getting wrong.</p>
+
+  <figure>
+    <img src="assets/m4/boosting_vs_bagging.png" alt="Schematic comparing bagging, with independent trees, to boosting, with sequential stumps">
+    <figcaption>Bagging builds independent trees side by side, while boosting builds stumps in sequence and reweights the data between them.</figcaption>
+  </figure>
+
+  <p>AdaBoost, short for adaptive boosting, usually uses decision stumps as its weak learners: trees with a single split, a barely better-than-guessing rule such as one question about one measurement. Every row of training data starts with the same weight, 1/n. In each round a stump is fitted to the weighted rows, so a row with a larger weight counts for more. The stump's weighted error is the total weight of the rows it gets wrong, and its vote weight is alpha = 1/2 ln((1 - error) / error). Alpha is large when the error is small, zero when the stump is no better than a coin flip, and negative if it is worse. The rows are then reweighted: wrongly classified rows are multiplied by e<sup>alpha</sup> and correctly classified rows by e<sup>-alpha</sup>, and the weights are rescaled to sum to 1, so the next stump is pushed toward the rows that have been hardest. After all rounds, each stump votes for a class, its vote is multiplied by its alpha, and the class with the larger total wins. The scikit-learn version of the formula drops the factor of one half, which doubles every alpha but changes neither the relative reweighting nor the winner of the vote.</p>
+
+  <figure>
+    <img src="assets/m4/ada_rounds_toy.png" alt="Three rounds of AdaBoost on a toy dataset with point size showing weight, and the final weighted vote">
+    <figcaption>On a toy dataset, mistakes in each round get larger weights, and the three stumps together, voting by alpha, follow the diagonal boundary that no single stump can.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/m4/ada_alpha_curve.png" alt="Alpha as a function of stump error, and an example of a weighted vote">
+    <figcaption>A stump with a low error earns a large alpha, and the final class is the sign of the alpha-weighted sum of the votes.</figcaption>
+  </figure>
+
+  <h2>Data Prep</h2>
+  <p>AdaBoost uses the same labeled data and split as the earlier supervised models: 5,047 planets, split at random into a training set of 3,532 (46 habitable) and a testing set of 1,515 (20 habitable), with no planet in both, so the testing set measures performance on planets the model never saw. The eight measurements are already numeric, but scikit-learn's AdaBoost needs numbers only, so a categorical column was added and encoded: how the planet was discovered. One-hot encoding turns each of the 8 discovery methods found in the training set into its own 0/1 column, which gives 8 measurements plus 8 method columns. The columns were built from the training set and the testing set was lined up to the same columns, so a method that appears only in the testing set is ignored. Rounds and learning rate were tuned with five-fold cross-validation inside the training set, which keeps the testing set untouched until the end.</p>
+
+  <figure>
+    <img src="assets/m4/ada_onehot_preview.png" alt="One-hot encoding of discovery method into 0/1 columns">
+    <figcaption>The one-hot step: one example planet per discovery method, with the method turned into 0/1 columns.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/m3/train_preview.png" alt="Preview of the training set">
+    <figcaption>A sample of the training set, 3,532 planets (46 habitable), the planets AdaBoost was fitted on.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/m3/test_preview.png" alt="Preview of the testing set">
+    <figcaption>A sample of the testing set, 1,515 planets (20 habitable), used only to score the final models.</figcaption>
+  </figure>
+
+  <p>Data files: <a href="data/labeled_sample.csv">labeled_sample.csv</a>, <a href="data/train_set.csv">train_set.csv</a>, and <a href="data/test_set.csv">test_set.csv</a>, with the discovery method taken from <a href="data/exoplanets_clean.csv">exoplanets_clean.csv</a>.</p>
+
+  <h2>Code</h2>
+  <p>Data split: <a href="scripts/prep_train_test.py">prep_train_test.py</a>. AdaBoost: <a href="scripts/adaboost.py">adaboost.py</a>. Both are written in Python and use <code>pandas</code>, <code>scikit-learn</code>, and <code>matplotlib</code>.</p>
+
+  <h2>Results</h2>
+  <p>Validation accuracy was tracked as boosting rounds were added, for four learning rates. A learning rate of 0.01 never rose above the 98.7% of always guessing not habitable in 200 rounds, and 0.1 only began to improve after about 130 rounds. Rates of 0.5 and 1.0 climbed within the first 25 to 50 rounds, and the rate of 1.0 leveled off near 99.3% to 99.4% after about 90 rounds, though the curve is noisy. Because accuracy has a floor of 98.7%, the settings were chosen by F1 on the habitable class instead, which does react to finding the rare planets. The best setting was a learning rate of 1.0 with 151 rounds, at a validation F1 of 0.75 and a validation accuracy of 99.4%. That setting sits at the top edge of the learning rates tried and the curve is noisy, so nearby settings would likely do about as well.</p>
+
+  <figure>
+    <img src="assets/m4/ada_tuning.png" alt="Validation accuracy and F1 as boosting rounds are added, for four learning rates">
+    <figcaption>Higher learning rates reach good performance in far fewer rounds, and accuracy barely moves compared with F1 because habitable planets are so rare.</figcaption>
+  </figure>
+
+  <p>On the 1,515 testing planets, AdaBoost with default settings (50 rounds, learning rate 1.0) reached 99.3% accuracy, found 13 of the 20 habitable planets, and raised 4 false alarms. The tuned model (151 rounds) reached 99.3%, found the same 13, and raised 3 false alarms, so 81% of its flags were correct. Adding the one-hot discovery-method columns made no difference to the test result, and the tuned model leans mostly on equilibrium temperature (about 43% of the importance), then planet radius (19%), host star temperature (14%), and orbital period (14%). The alpha values show the mechanism at work: the first stump has an error of 0.013, equal to the share of habitable planets in the training set, so it essentially votes not habitable for every planet and earns a very large alpha of 4.3. Later stumps, forced by the growing weights to focus on the rare habitable planets, have larger errors (0.058, then 0.19) and smaller alphas (2.8, then 1.4).</p>
+
+  <figure>
+    <img src="assets/m4/ada_confusion_matrices.png" alt="Confusion matrices for AdaBoost with default and tuned settings">
+    <figcaption>Tuning removed one false alarm and left the same 13 habitable planets found and 7 missed.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/m4/ada_alpha_by_round.png" alt="Alpha of each stump in the first 30 rounds of the tuned model">
+    <figcaption>The first stump gets by far the largest vote, and later stumps, which tackle the hard cases, carry less.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="assets/m4/ada_feature_importance.png" alt="Feature importance for the tuned AdaBoost model">
+    <figcaption>Equilibrium temperature and planet radius carry most of the weight, with discovery method contributing almost nothing.</figcaption>
+  </figure>
+
+  <p>Against the Part 3 decision tree (Tree 1, Gini, depth 3), AdaBoost is better on accuracy and precision but worse on recall. The tree scored 99.1%, found 18 of 20 habitable planets, and raised 12 false alarms (60% of flags correct), against 99.3%, 13 of 20, and 3 false alarms (81%) for tuned AdaBoost. AdaBoost made 10 mistakes in total against 14 for the tree, an accuracy gain of 0.26 percentage points, but the tree missed 2 habitable planets where AdaBoost missed 7. The two end up essentially tied on F1, at about 0.72 each, so which did best depends on what matters: AdaBoost for a short, precise list, and the tree for missing fewer. With only 20 habitable planets in the testing set, neither difference should be over-read.</p>
+
+  <figure>
+    <img src="assets/m4/ada_vs_tree.png" alt="Accuracy, recall, and precision for the Part 3 decision tree and AdaBoost">
+    <figcaption>AdaBoost trades recall for precision compared with the single tree, and the two have nearly the same overall balance.</figcaption>
+  </figure>
+
+  <h2>Conclusions</h2>
+  <p>Boosting many simple stumps beat a single tree slightly on overall accuracy, but not on the thing that matters most for finding habitable planets, which is missing as few as possible. The models built so far form a spectrum: balanced logistic regression flagged 98 planets and caught all 20 habitable ones, the decision tree flagged 30 and caught 18, and AdaBoost flagged 16 and caught 13. Which is best depends on the cost of looking at a wrong planet against the cost of overlooking a right one, which for scarce telescope time is a real trade-off. Every model leans on the same few measurements, equilibrium temperature first and planet size second, so the profile of a candidate is stable even when the shortlists differ. Cautions carry over: only 20 habitable planets are in the testing set, many masses and radii are estimates tied together by a formula, and the label is built from quantities closely related to these same measurements.</p>
+<div class="pipeline-nav"><a class="prev" href="regression.html">&larr; Regression</a><a class="next" href="gradientboosting.html">GradientBoosting &rarr;</a></div></main>
+<footer>
+  Exoplanet Discovery &amp; Habitability. A semester project for a Machine Learning course, built module by module.
+</footer>
+</body>
+</html>
