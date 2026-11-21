@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav class="topnav"><span class="brand">Exoplanet Discovery &amp; Habitability</span><a href="index.html">Introduction</a><a href="data_gathering.html">Data Gathering</a><a href="cleaning_prep.html" class="active">Cleaning &amp; Prep</a><a href="eda.html">EDA</a><a href="clustering.html">Clustering</a><a href="pca.html">PCA</a><a href="naivebayes.html">NaiveBayes</a><a href="dectrees.html">DecTrees</a><a href="svms.html">SVMs</a><a href="regression.html">Regression</a><a href="nn.html">NN</a><a href="conclusions.html">Conclusions</a><a href="about_references.html">About / References</a></nav><main>
+<nav class="topnav"><span class="brand">Exoplanet Discovery &amp; Habitability</span><a href="index.html">Introduction</a><a href="data_gathering.html">Data Gathering</a><a href="cleaning_prep.html" class="active">Cleaning &amp; Prep</a><a href="eda.html">EDA</a><a href="clustering.html">Clustering</a><a href="pca.html">PCA</a><a href="naivebayes.html">NaiveBayes</a><a href="dectrees.html">DecTrees</a><a href="regression.html">Regression</a><a href="adaboost.html">AdaBoost</a><a href="gradientboosting.html">GradientBoosting</a><a href="xgboost.html">XGBoost</a><a href="conclusions.html">Conclusions</a><a href="about_references.html">About / References</a></nav><main>
   <p class="eyebrow">Cleaning &amp; Prep</p>
   <h1>Cleaning &amp; Prep</h1>
 
@@ -35,6 +35,8 @@
     <img src="assets/eda/12_top_esi_table.png" alt="Table of the 10 planets with the highest Earth Similarity Index">
     <figcaption>The ten planets the Habitable Worlds Catalog currently rates most Earth-like, led by Teegarden's Star b and TOI-700 d, several of which now appear in every later analysis on this site.</figcaption>
   </figure>
+
+  <p>A later check, made while preparing the regression analysis, found that many planets have a mass and radius that fall within 1% of a published mass-radius formula (2,550 of the 3,532 planets in the training set), which suggests the archive's composite table filled in one of the two values from the other for those planets. The values were kept, since they are what the archive reports, but results that depend on mass and radius together should be read with this in mind, and the Regression tab reports its results both with and without these planets.</p>
 
   <p>Full cleaned and merged file: <a href="data/exoplanets_clean.csv">exoplanets_clean.csv</a> (6,366 rows, 21 columns). Cleaning and merging code: <a href="scripts/clean_and_visualize.py">clean_and_visualize.py</a> (Python, uses <code>pandas</code>).</p>
 <div class="pipeline-nav"><a class="prev" href="data_gathering.html">&larr; Data Gathering</a><a class="next" href="eda.html">EDA &rarr;</a></div></main>
